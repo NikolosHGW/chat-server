@@ -1,12 +1,14 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE chats (
+CREATE TABLE chat_users (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    created_at TIMESTAMP NOT NULL DEFAULT now()
+    chat_id INTEGER REFERENCES chats(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL,
+    UNIQUE (chat_id, user_id)
 );
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE chats;
+DROP TABLE chat_users;
 -- +goose StatementEnd

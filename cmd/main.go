@@ -36,7 +36,7 @@ func main() {
 func (s *userServer) Create(ctx context.Context, req *chatpb.CreateRequest) (*chatpb.CreateResponse, error) {
 	_, cancel := context.WithCancel(ctx)
 	defer cancel()
-	fmt.Println(req.Usernames)
+	fmt.Println(req.UserIds)
 
 	return &chatpb.CreateResponse{
 		Id: 1,
@@ -54,7 +54,7 @@ func (s *userServer) Delete(ctx context.Context, req *chatpb.DeleteRequest) (*em
 func (s *userServer) SendMessage(ctx context.Context, req *chatpb.SendMessageRequest) (*emptypb.Empty, error) {
 	_, cancel := context.WithCancel(ctx)
 	defer cancel()
-	fmt.Println(req.From, req.Text, req.Timestamp)
+	fmt.Println(req.FromUserId, req.Text, req.Timestamp)
 
 	return &emptypb.Empty{}, nil
 }
