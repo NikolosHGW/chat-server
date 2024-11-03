@@ -84,6 +84,7 @@ func TestCreate(t *testing.T) {
 			assert.Equal(t, tt.want, res)
 			if tt.err != nil {
 				assert.ErrorContains(t, err, "layer api: не получилось создать чат:")
+				assert.ErrorIs(t, err, tt.err)
 			} else {
 				assert.Equal(t, tt.err, err)
 			}

@@ -11,7 +11,7 @@ import (
 func (i *implementation) Delete(ctx context.Context, req *chatpb.DeleteRequest) (*emptypb.Empty, error) {
 	err := i.chatService.Delete(ctx, req.Id)
 	if err != nil {
-		return &emptypb.Empty{}, fmt.Errorf("layer api: не получилось удалить чат: %w", err)
+		return nil, fmt.Errorf("layer api: не получилось удалить чат: %w", err)
 	}
 
 	return &emptypb.Empty{}, nil
