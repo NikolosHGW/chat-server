@@ -47,3 +47,16 @@ local-migration-up:
 
 local-migration-down:
 	$(LOCAL_BIN)/goose -dir ${LOCAL_MIGRATION_DIR} postgres ${LOCAL_MIGRATION_DSN} down -v
+
+test-cover:
+	go test -v -coverpkg=./... -coverprofile=coverage.out -covermode=count ./...
+	go tool cover -func=coverage.out
+
+# Определяем переменную PACKAGES, исключая пакеты с /mocks/
+PACKAGES := $(shell go list ./internal/... | grep -v /mocks | paste -sd, -)
+
+# Проверяем покрытия тестами только код с бизнес-логикой. В текущий момент бизнес-логика пока что находится только в internal.
+test-cover-logic-only:
+	@echo "Covering packages: $(PACKAGES)"
+	go test -v -coverpkg=$(PACKAGES) -coverprofile=coverage.out -covermode=count ./internal/...
+	go tool cover -func=coverage.out
