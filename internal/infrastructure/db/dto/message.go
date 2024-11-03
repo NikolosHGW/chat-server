@@ -2,6 +2,7 @@ package dto
 
 import "time"
 
+// MessageDTO - модель сообщения для слоя репозиторий.
 type MessageDTO struct {
 	Text       string    `db:"text"`
 	ID         int64     `db:"id"`
