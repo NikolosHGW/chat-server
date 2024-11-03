@@ -10,16 +10,17 @@ import (
 type implementation struct {
 	chatpb.ChatV1Server
 
-	chatService ChatService
+	chatService Service
 }
 
-type ChatService interface {
+// Service интерфейс для инъекции сервиса чата
+type Service interface {
 	Create(context.Context, []int64) (int64, error)
 	Delete(context.Context, int64) error
 	SendMessage(context.Context, *domain.Message) error
 }
 
 // NewImplementation - конструктор gRPC сервера.
-func NewImplementation(chatService ChatService) *implementation {
+func NewImplementation(chatService Service) *implementation {
 	return &implementation{chatService: chatService}
 }

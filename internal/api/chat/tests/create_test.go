@@ -14,7 +14,7 @@ import (
 )
 
 func TestCreate(t *testing.T) {
-	type chatServiceMockFunc func(mc *minimock.Controller) chat.ChatService
+	type chatServiceMockFunc func(mc *minimock.Controller) chat.Service
 
 	type args struct {
 		ctx context.Context
@@ -24,11 +24,11 @@ func TestCreate(t *testing.T) {
 	var (
 		mc = minimock.NewController(t)
 
-		userIDS = []int64{gofakeit.Int64(), gofakeit.Int64()}
+		userIDs = []int64{gofakeit.Int64(), gofakeit.Int64()}
 		chatID  = gofakeit.Int64()
 		ctx     = context.Background()
 		req     = &chatpb.CreateRequest{
-			UserIds: userIDS,
+			UserIds: userIDs,
 		}
 		res        = &chatpb.CreateResponse{Id: chatID}
 		serviceErr = fmt.Errorf("service error")
@@ -49,9 +49,9 @@ func TestCreate(t *testing.T) {
 			},
 			want: res,
 			err:  nil,
-			chatServiceMock: func(mc *minimock.Controller) chat.ChatService {
-				mock := mocks.NewChatServiceMock(mc)
-				mock.CreateMock.Expect(ctx, userIDS).Return(chatID, nil)
+			chatServiceMock: func(mc *minimock.Controller) chat.Service {
+				mock := mocks.NewServiceMock(mc)
+				mock.CreateMock.Expect(ctx, userIDs).Return(chatID, nil)
 
 				return mock
 			},
@@ -64,9 +64,9 @@ func TestCreate(t *testing.T) {
 			},
 			want: nil,
 			err:  serviceErr,
-			chatServiceMock: func(mc *minimock.Controller) chat.ChatService {
-				mock := mocks.NewChatServiceMock(mc)
-				mock.CreateMock.Expect(ctx, userIDS).Return(0, serviceErr)
+			chatServiceMock: func(mc *minimock.Controller) chat.Service {
+				mock := mocks.NewServiceMock(mc)
+				mock.CreateMock.Expect(ctx, userIDs).Return(0, serviceErr)
 
 				return mock
 			},
