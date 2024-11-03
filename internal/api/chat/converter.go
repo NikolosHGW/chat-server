@@ -5,8 +5,8 @@ import (
 	chatpb "github.com/NikolosHGW/chat-server/pkg/chat/v1"
 )
 
-func convertToMessageDomain(req *chatpb.SendMessageRequest) *domain.Message {
-	return &domain.Message{
+func convertToMessageDomain(req *chatpb.SendMessageRequest) domain.Message {
+	return domain.Message{
 		ChatID:     req.ChatId,
 		FromUserID: req.FromUserId,
 		Text:       req.Text,

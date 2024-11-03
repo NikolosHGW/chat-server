@@ -33,9 +33,9 @@ type ServiceMock struct {
 	beforeDeleteCounter uint64
 	DeleteMock          mServiceMockDelete
 
-	funcSendMessage          func(ctx context.Context, mp1 *domain.Message) (err error)
+	funcSendMessage          func(ctx context.Context, m1 domain.Message) (err error)
 	funcSendMessageOrigin    string
-	inspectFuncSendMessage   func(ctx context.Context, mp1 *domain.Message)
+	inspectFuncSendMessage   func(ctx context.Context, m1 domain.Message)
 	afterSendMessageCounter  uint64
 	beforeSendMessageCounter uint64
 	SendMessageMock          mServiceMockSendMessage
@@ -775,13 +775,13 @@ type ServiceMockSendMessageExpectation struct {
 // ServiceMockSendMessageParams contains parameters of the Service.SendMessage
 type ServiceMockSendMessageParams struct {
 	ctx context.Context
-	mp1 *domain.Message
+	m1  domain.Message
 }
 
 // ServiceMockSendMessageParamPtrs contains pointers to parameters of the Service.SendMessage
 type ServiceMockSendMessageParamPtrs struct {
 	ctx *context.Context
-	mp1 **domain.Message
+	m1  *domain.Message
 }
 
 // ServiceMockSendMessageResults contains results of the Service.SendMessage
@@ -793,7 +793,7 @@ type ServiceMockSendMessageResults struct {
 type ServiceMockSendMessageExpectationOrigins struct {
 	origin    string
 	originCtx string
-	originMp1 string
+	originM1  string
 }
 
 // Marks this method to be optional. The default behavior of any method with Return() is '1 or more', meaning
@@ -807,7 +807,7 @@ func (mmSendMessage *mServiceMockSendMessage) Optional() *mServiceMockSendMessag
 }
 
 // Expect sets up expected params for Service.SendMessage
-func (mmSendMessage *mServiceMockSendMessage) Expect(ctx context.Context, mp1 *domain.Message) *mServiceMockSendMessage {
+func (mmSendMessage *mServiceMockSendMessage) Expect(ctx context.Context, m1 domain.Message) *mServiceMockSendMessage {
 	if mmSendMessage.mock.funcSendMessage != nil {
 		mmSendMessage.mock.t.Fatalf("ServiceMock.SendMessage mock is already set by Set")
 	}
@@ -820,7 +820,7 @@ func (mmSendMessage *mServiceMockSendMessage) Expect(ctx context.Context, mp1 *d
 		mmSendMessage.mock.t.Fatalf("ServiceMock.SendMessage mock is already set by ExpectParams functions")
 	}
 
-	mmSendMessage.defaultExpectation.params = &ServiceMockSendMessageParams{ctx, mp1}
+	mmSendMessage.defaultExpectation.params = &ServiceMockSendMessageParams{ctx, m1}
 	mmSendMessage.defaultExpectation.expectationOrigins.origin = minimock.CallerInfo(1)
 	for _, e := range mmSendMessage.expectations {
 		if minimock.Equal(e.params, mmSendMessage.defaultExpectation.params) {
@@ -854,8 +854,8 @@ func (mmSendMessage *mServiceMockSendMessage) ExpectCtxParam1(ctx context.Contex
 	return mmSendMessage
 }
 
-// ExpectMp1Param2 sets up expected param mp1 for Service.SendMessage
-func (mmSendMessage *mServiceMockSendMessage) ExpectMp1Param2(mp1 *domain.Message) *mServiceMockSendMessage {
+// ExpectM1Param2 sets up expected param m1 for Service.SendMessage
+func (mmSendMessage *mServiceMockSendMessage) ExpectM1Param2(m1 domain.Message) *mServiceMockSendMessage {
 	if mmSendMessage.mock.funcSendMessage != nil {
 		mmSendMessage.mock.t.Fatalf("ServiceMock.SendMessage mock is already set by Set")
 	}
@@ -871,14 +871,14 @@ func (mmSendMessage *mServiceMockSendMessage) ExpectMp1Param2(mp1 *domain.Messag
 	if mmSendMessage.defaultExpectation.paramPtrs == nil {
 		mmSendMessage.defaultExpectation.paramPtrs = &ServiceMockSendMessageParamPtrs{}
 	}
-	mmSendMessage.defaultExpectation.paramPtrs.mp1 = &mp1
-	mmSendMessage.defaultExpectation.expectationOrigins.originMp1 = minimock.CallerInfo(1)
+	mmSendMessage.defaultExpectation.paramPtrs.m1 = &m1
+	mmSendMessage.defaultExpectation.expectationOrigins.originM1 = minimock.CallerInfo(1)
 
 	return mmSendMessage
 }
 
 // Inspect accepts an inspector function that has same arguments as the Service.SendMessage
-func (mmSendMessage *mServiceMockSendMessage) Inspect(f func(ctx context.Context, mp1 *domain.Message)) *mServiceMockSendMessage {
+func (mmSendMessage *mServiceMockSendMessage) Inspect(f func(ctx context.Context, m1 domain.Message)) *mServiceMockSendMessage {
 	if mmSendMessage.mock.inspectFuncSendMessage != nil {
 		mmSendMessage.mock.t.Fatalf("Inspect function is already set for ServiceMock.SendMessage")
 	}
@@ -903,7 +903,7 @@ func (mmSendMessage *mServiceMockSendMessage) Return(err error) *ServiceMock {
 }
 
 // Set uses given function f to mock the Service.SendMessage method
-func (mmSendMessage *mServiceMockSendMessage) Set(f func(ctx context.Context, mp1 *domain.Message) (err error)) *ServiceMock {
+func (mmSendMessage *mServiceMockSendMessage) Set(f func(ctx context.Context, m1 domain.Message) (err error)) *ServiceMock {
 	if mmSendMessage.defaultExpectation != nil {
 		mmSendMessage.mock.t.Fatalf("Default expectation is already set for the Service.SendMessage method")
 	}
@@ -919,14 +919,14 @@ func (mmSendMessage *mServiceMockSendMessage) Set(f func(ctx context.Context, mp
 
 // When sets expectation for the Service.SendMessage which will trigger the result defined by the following
 // Then helper
-func (mmSendMessage *mServiceMockSendMessage) When(ctx context.Context, mp1 *domain.Message) *ServiceMockSendMessageExpectation {
+func (mmSendMessage *mServiceMockSendMessage) When(ctx context.Context, m1 domain.Message) *ServiceMockSendMessageExpectation {
 	if mmSendMessage.mock.funcSendMessage != nil {
 		mmSendMessage.mock.t.Fatalf("ServiceMock.SendMessage mock is already set by Set")
 	}
 
 	expectation := &ServiceMockSendMessageExpectation{
 		mock:               mmSendMessage.mock,
-		params:             &ServiceMockSendMessageParams{ctx, mp1},
+		params:             &ServiceMockSendMessageParams{ctx, m1},
 		expectationOrigins: ServiceMockSendMessageExpectationOrigins{origin: minimock.CallerInfo(1)},
 	}
 	mmSendMessage.expectations = append(mmSendMessage.expectations, expectation)
@@ -961,17 +961,17 @@ func (mmSendMessage *mServiceMockSendMessage) invocationsDone() bool {
 }
 
 // SendMessage implements mm_chat.Service
-func (mmSendMessage *ServiceMock) SendMessage(ctx context.Context, mp1 *domain.Message) (err error) {
+func (mmSendMessage *ServiceMock) SendMessage(ctx context.Context, m1 domain.Message) (err error) {
 	mm_atomic.AddUint64(&mmSendMessage.beforeSendMessageCounter, 1)
 	defer mm_atomic.AddUint64(&mmSendMessage.afterSendMessageCounter, 1)
 
 	mmSendMessage.t.Helper()
 
 	if mmSendMessage.inspectFuncSendMessage != nil {
-		mmSendMessage.inspectFuncSendMessage(ctx, mp1)
+		mmSendMessage.inspectFuncSendMessage(ctx, m1)
 	}
 
-	mm_params := ServiceMockSendMessageParams{ctx, mp1}
+	mm_params := ServiceMockSendMessageParams{ctx, m1}
 
 	// Record call args
 	mmSendMessage.SendMessageMock.mutex.Lock()
@@ -990,7 +990,7 @@ func (mmSendMessage *ServiceMock) SendMessage(ctx context.Context, mp1 *domain.M
 		mm_want := mmSendMessage.SendMessageMock.defaultExpectation.params
 		mm_want_ptrs := mmSendMessage.SendMessageMock.defaultExpectation.paramPtrs
 
-		mm_got := ServiceMockSendMessageParams{ctx, mp1}
+		mm_got := ServiceMockSendMessageParams{ctx, m1}
 
 		if mm_want_ptrs != nil {
 
@@ -999,9 +999,9 @@ func (mmSendMessage *ServiceMock) SendMessage(ctx context.Context, mp1 *domain.M
 					mmSendMessage.SendMessageMock.defaultExpectation.expectationOrigins.originCtx, *mm_want_ptrs.ctx, mm_got.ctx, minimock.Diff(*mm_want_ptrs.ctx, mm_got.ctx))
 			}
 
-			if mm_want_ptrs.mp1 != nil && !minimock.Equal(*mm_want_ptrs.mp1, mm_got.mp1) {
-				mmSendMessage.t.Errorf("ServiceMock.SendMessage got unexpected parameter mp1, expected at\n%s:\nwant: %#v\n got: %#v%s\n",
-					mmSendMessage.SendMessageMock.defaultExpectation.expectationOrigins.originMp1, *mm_want_ptrs.mp1, mm_got.mp1, minimock.Diff(*mm_want_ptrs.mp1, mm_got.mp1))
+			if mm_want_ptrs.m1 != nil && !minimock.Equal(*mm_want_ptrs.m1, mm_got.m1) {
+				mmSendMessage.t.Errorf("ServiceMock.SendMessage got unexpected parameter m1, expected at\n%s:\nwant: %#v\n got: %#v%s\n",
+					mmSendMessage.SendMessageMock.defaultExpectation.expectationOrigins.originM1, *mm_want_ptrs.m1, mm_got.m1, minimock.Diff(*mm_want_ptrs.m1, mm_got.m1))
 			}
 
 		} else if mm_want != nil && !minimock.Equal(*mm_want, mm_got) {
@@ -1016,9 +1016,9 @@ func (mmSendMessage *ServiceMock) SendMessage(ctx context.Context, mp1 *domain.M
 		return (*mm_results).err
 	}
 	if mmSendMessage.funcSendMessage != nil {
-		return mmSendMessage.funcSendMessage(ctx, mp1)
+		return mmSendMessage.funcSendMessage(ctx, m1)
 	}
-	mmSendMessage.t.Fatalf("Unexpected call to ServiceMock.SendMessage. %v %v", ctx, mp1)
+	mmSendMessage.t.Fatalf("Unexpected call to ServiceMock.SendMessage. %v %v", ctx, m1)
 	return
 }
 

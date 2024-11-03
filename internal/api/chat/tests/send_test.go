@@ -33,7 +33,7 @@ func TestSendMessage(t *testing.T) {
 			Text:       textMessage,
 			Timestamp:  timestamppb.Now(),
 		}
-		domainMessage = &domain.Message{
+		domainMessage = domain.Message{
 			ChatID:     chatID,
 			FromUserID: userID,
 			Text:       textMessage,

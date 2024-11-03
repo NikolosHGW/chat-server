@@ -48,15 +48,18 @@ local-migration-up:
 local-migration-down:
 	$(LOCAL_BIN)/goose -dir ${LOCAL_MIGRATION_DIR} postgres ${LOCAL_MIGRATION_DSN} down -v
 
-test-cover:
-	go test -v -coverpkg=./... -coverprofile=coverage.out -covermode=count ./...
-	go tool cover -func=coverage.out
+test:
+	go clean -testcache
+	go test ./... -coverprofile=coverage.tmp.out -covermode count -coverpkg=github.com/NikolosHGW/chat-server/internal/service/...,github.com/NikolosHGW/chat-server/internal/api/... -count 5
 
-# Определяем переменную PACKAGES, исключая пакеты с /mocks/
-PACKAGES := $(shell go list ./internal/... | grep -v /mocks | paste -sd, -)
+full-test:
+	go clean -testcache
+	go test -v --count 1 ./...
 
-# Проверяем покрытия тестами только код с бизнес-логикой. В текущий момент бизнес-логика пока что находится только в internal.
-test-cover-logic-only:
-	@echo "Covering packages: $(PACKAGES)"
-	go test -v -coverpkg=$(PACKAGES) -coverprofile=coverage.out -covermode=count ./internal/...
-	go tool cover -func=coverage.out
+test-coverage:
+	go clean -testcache
+	go test ./... -coverprofile=coverage.tmp.out -covermode count -coverpkg=github.com/NikolosHGW/chat-server/internal/service/...,github.com/NikolosHGW/chat-server/internal/api/... -count 5
+	grep -v 'mocks\|config' coverage.tmp.out  > coverage.out
+	rm coverage.tmp.out
+	go tool cover -html=coverage.out;
+	go tool cover -func=./coverage.out | grep "total";
