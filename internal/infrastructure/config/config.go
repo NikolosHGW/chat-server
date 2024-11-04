@@ -1,50 +1,21 @@
 package config
 
 import (
+	"flag"
 	"fmt"
-	"log"
-	"net"
 
-	"github.com/caarlos0/env"
 	"github.com/joho/godotenv"
 )
 
-type config struct {
-	GRPCHost    string `env:"GRPC_HOST"`
-	GRPCPort    string `env:"GRPC_PORT"`
-	DatabaseDSN string `env:"DATABASE_DSN"`
-}
+// Load - подгружает .env файл с помощью флага -c.
+func Load() error {
+	var envPath string
+	flag.StringVar(&envPath, "c", ".env", "path to config file .env")
 
-func (c *config) initEnv() error {
-	// err := godotenv.Load("path/to/your/.env")
-	err := godotenv.Load()
+	err := godotenv.Load(envPath)
 	if err != nil {
-		return fmt.Errorf("не удалось загрузить файл .env: %w", err)
-	}
-
-	err = env.Parse(c)
-	if err != nil {
-		return fmt.Errorf("не удалось спарсить env: %w", err)
+		return fmt.Errorf("не удалось загрузить файл .env, который находится по пути %s: %w", envPath, err)
 	}
 
 	return nil
-}
-
-// NewConfig - создание конфига. Использовать позже.
-func NewConfig() *config {
-	cfg := new(config)
-
-	if err := cfg.initEnv(); err != nil {
-		log.Fatalf("Ошибка при инициализации переменных окружения: %v", err)
-	}
-
-	return cfg
-}
-
-func (c config) GetRunAddress() string {
-	return net.JoinHostPort(c.GRPCHost, c.GRPCPort)
-}
-
-func (c config) GetDatabaseDSN() string {
-	return c.DatabaseDSN
 }

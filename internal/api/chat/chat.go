@@ -24,3 +24,5 @@ type Service interface {
 func NewImplementation(chatService Service) *implementation {
 	return &implementation{chatService: chatService}
 }
+
+type PublicServerImplementation = implementation

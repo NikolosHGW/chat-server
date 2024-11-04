@@ -1,46 +1,20 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"log"
-	"net"
 
-	apiChat "github.com/NikolosHGW/chat-server/internal/api/chat"
-	"github.com/NikolosHGW/chat-server/internal/infrastructure/config"
-	repoChat "github.com/NikolosHGW/chat-server/internal/repository/chat"
-	serviceChat "github.com/NikolosHGW/chat-server/internal/service/chat"
-	chatpb "github.com/NikolosHGW/chat-server/pkg/chat/v1"
-	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
+	"github.com/NikolosHGW/chat-server/internal/app"
 )
 
-const grpcPort = 3200
-
 func main() {
-	cfg := config.NewConfig()
-
-	db, err := sqlx.Connect("postgres", cfg.GetDatabaseDSN())
+	app, err := app.NewApp(context.Background())
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalf("ошибка инициализации приложения: %s", err.Error())
 	}
 
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))
+	err = app.Run()
 	if err != nil {
-		log.Fatal(err)
-	}
-	s := grpc.NewServer()
-	reflection.Register(s)
-
-	chatRepo := repoChat.NewRepo(db)
-	chatService := serviceChat.NewService(chatRepo)
-	chatAPI := apiChat.NewImplementation(chatService)
-
-	chatpb.RegisterChatV1Server(s, chatAPI)
-
-	fmt.Println("Сервер gRPC начал работу")
-	if err := s.Serve(listen); err != nil {
-		log.Fatal(err)
+		log.Fatalf("ошибка запуска приложения: %s", err.Error())
 	}
 }

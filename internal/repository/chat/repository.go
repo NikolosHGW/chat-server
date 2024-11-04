@@ -10,3 +10,5 @@ type repo struct {
 func NewRepo(db *sqlx.DB) *repo {
 	return &repo{db: db}
 }
+
+type PublicRepo = repo

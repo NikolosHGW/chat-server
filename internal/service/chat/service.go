@@ -21,3 +21,5 @@ type service struct {
 func NewService(chatRepo repoChat) *service {
 	return &service{chatRepo: chatRepo}
 }
+
+type PublicService = service
