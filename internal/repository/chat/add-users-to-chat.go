@@ -6,18 +6,18 @@ import (
 )
 
 type chatUser struct {
-	chatID int64 `db:"chat_id"`
-	userID int64 `db:"user_id"`
+	ChatID int64 `db:"chat_id"`
+	UserID int64 `db:"user_id"`
 }
 
 func (r *repo) AddUsersToChat(ctx context.Context, chatID int64, userIDs []int64) error {
 	chatUsers := make([]chatUser, len(userIDs))
 	for i, userID := range userIDs {
-		chatUsers[i] = chatUser{chatID: chatID, userID: userID}
+		chatUsers[i] = chatUser{ChatID: chatID, UserID: userID}
 	}
 
 	query := `
-		INSERT INTO person
+		INSERT INTO chat_users
 			(chat_id, user_id)
         VALUES
 			(:chat_id, :user_id)
