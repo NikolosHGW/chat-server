@@ -11,6 +11,7 @@ import (
 	serviceChat "github.com/NikolosHGW/chat-server/internal/service/chat"
 	chatpb "github.com/NikolosHGW/chat-server/pkg/chat/v1"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
