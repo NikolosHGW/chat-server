@@ -1,6 +1,7 @@
 package closer
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -76,18 +77,32 @@ func (c *closer) closeAll() {
 		c.mu.Lock()
 		defer c.mu.Unlock()
 
+		var wg sync.WaitGroup
+
 		errsCh := make(chan error, len(c.funcs))
 		for _, f := range c.funcs {
-			go func() {
-				err := f()
-				if err != nil {
-					errsCh <- err
-				}
-			}()
+			wg.Add(1)
+			go func(f func() error) {
+				defer wg.Done()
+				defer func() {
+					if r := recover(); r != nil {
+						errsCh <- fmt.Errorf("panic при выполнении функции закрытия: %v", r)
+					}
+				}()
+
+				errsCh <- f()
+			}(f)
 		}
 
+		go func() {
+			wg.Wait()
+			close(errsCh)
+		}()
+
 		for err := range errsCh {
-			log.Fatal(err.Error())
+			if err != nil {
+				log.Println("Ошибка при закрытии: ", err)
+			}
 		}
 	})
 }

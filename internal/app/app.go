@@ -33,6 +33,7 @@ func (a *app) Run() error {
 	defer func() {
 		closer.CloseAll()
 		closer.Wait()
+		log.Println("Приложение завершено корректно.")
 	}()
 
 	return a.runGRPCServer()
@@ -79,7 +80,7 @@ func (a *app) runGRPCServer() error {
 	closer.Add(
 		func() error {
 			log.Printf(
-				"Отключаем сервер по адресу %s ...",
+				"Отключаем сервер по адресу %s...",
 				a.serviceProvider.GRPCConfig().GetRunAddress(),
 			)
 			a.grpcServer.GracefulStop()
