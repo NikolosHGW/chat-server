@@ -7,16 +7,29 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// Handler - тип функции, которой нужно обернуть код для транзакции.
+type Handler func(ctx context.Context) error
+
 // Client - клиента для работы с БД.
 type Client interface {
 	DB() DB
 	Close() error
 }
 
+// TxManager - интерфейс для использования транзакции с уровнем изоляции read committed.
+type TxManager interface {
+	ReadCommitted(ctx context.Context, f Handler) error
+}
+
 // Query - обёртка над запросом, хранящая имя запроса и сам запрос.
 type Query struct {
 	Name     string
 	QueryRaw string
+}
+
+// Transactor менеджер транзакций.
+type Transactor interface {
+	BeginTxx(ctx context.Context, opts *sql.TxOptions) (*sqlx.Tx, error)
 }
 
 // SQLExecer комбинирует NamedExecer и QueryExecer
@@ -46,5 +59,6 @@ type Pinger interface {
 type DB interface {
 	SQLExecer
 	Pinger
+	Transactor
 	Close() error
 }

@@ -3,6 +3,7 @@ package chat
 import (
 	"context"
 
+	"github.com/NikolosHGW/chat-server/internal/client/db"
 	"github.com/NikolosHGW/chat-server/internal/infrastructure/db/dto"
 )
 
@@ -14,12 +15,13 @@ type repoChat interface {
 }
 
 type service struct {
-	chatRepo repoChat
+	chatRepo  repoChat
+	txManager db.TxManager
 }
 
 // NewService - конструктор сервиса чата.
-func NewService(chatRepo repoChat) *service {
-	return &service{chatRepo: chatRepo}
+func NewService(chatRepo repoChat, txManager db.TxManager) *service {
+	return &service{chatRepo: chatRepo, txManager: txManager}
 }
 
 // PublicService - алиас для структуры чат-сервиса.

@@ -7,6 +7,7 @@ import (
 	apiChat "github.com/NikolosHGW/chat-server/internal/api/chat"
 	"github.com/NikolosHGW/chat-server/internal/client/db"
 	"github.com/NikolosHGW/chat-server/internal/client/db/pg"
+	"github.com/NikolosHGW/chat-server/internal/client/db/transaction"
 	"github.com/NikolosHGW/chat-server/internal/closer"
 	"github.com/NikolosHGW/chat-server/internal/infrastructure/config"
 	repoChat "github.com/NikolosHGW/chat-server/internal/repository/chat"
@@ -17,7 +18,8 @@ type serviceProvider struct {
 	pgConfig   *config.PublicPG
 	grpcConfig *config.PublicGRPC
 
-	dbClient db.Client
+	dbClient  db.Client
+	txManager db.TxManager
 
 	chatRepo *repoChat.PublicRepo
 
@@ -82,7 +84,7 @@ func (sp *serviceProvider) ChatRepo(ctx context.Context) *repoChat.PublicRepo {
 
 func (sp *serviceProvider) ChatService(ctx context.Context) *serviceChat.PublicService {
 	if sp.chatService == nil {
-		sp.chatService = serviceChat.NewService(sp.ChatRepo(ctx))
+		sp.chatService = serviceChat.NewService(sp.ChatRepo(ctx), sp.TxManager(ctx))
 	}
 
 	return sp.chatService
@@ -96,29 +98,10 @@ func (sp *serviceProvider) ChatServer(ctx context.Context) *apiChat.PublicServer
 	return sp.chatServer
 }
 
-// type pgConfiger interface {
-// 	GetDatabaseDSN() string
-// }
+func (sp *serviceProvider) TxManager(ctx context.Context) db.TxManager {
+	if sp.txManager == nil {
+		sp.txManager = transaction.NewTransactionManager(sp.DBClient(ctx).DB())
+	}
 
-// type grpcConfiger interface {
-// 	GetRunAddress() string
-// }
-
-// type chatRepo interface {
-// 	CreateChat(ctx context.Context) (int64, error)
-// 	AddUsersToChat(ctx context.Context, chatID int64, userIDs []int64) error
-// 	DeleteChat(ctx context.Context, chatID int64) error
-// 	CreateMessage(ctx context.Context, messageDTO dto.MessageDTO) error
-// }
-
-// type chatService interface {
-// 	Create(ctx context.Context, userIDs []int64) (int64, error)
-// 	Delete(ctx context.Context, chatID int64) error
-// 	SendMessage(ctx context.Context, message domain.Message) error
-// }
-
-// type chatServer interface {
-// 	Create(ctx context.Context, req *chatpb.CreateRequest) (*chatpb.CreateResponse, error)
-// 	Delete(ctx context.Context, req *chatpb.DeleteRequest) (*emptypb.Empty, error)
-// 	SendMessage(ctx context.Context, req *chatpb.SendMessageRequest) (*emptypb.Empty, error)
-// }
+	return sp.txManager
+}
