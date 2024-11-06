@@ -23,7 +23,7 @@ func (r *repo) AddUsersToChat(ctx context.Context, chatID int64, userIDs []int64
 			(:chat_id, :user_id)
 	`
 
-	_, err := r.db.NamedExecContext(ctx, query, chatUsers)
+	_, err := r.db.DB().NamedExecContext(ctx, query, chatUsers)
 	if err != nil {
 		return fmt.Errorf("layer repository: ошибка при добавлении пользователей в чат: %w", err)
 	}

@@ -21,7 +21,7 @@ type app struct {
 func NewApp(ctx context.Context) (*app, error) {
 	a := &app{}
 
-	err := a.initDeps()
+	err := a.initDeps(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("не удалось инициализировать зависимости приложения: %w", err)
 	}
@@ -39,14 +39,14 @@ func (a *app) Run() error {
 	return a.runGRPCServer()
 }
 
-func (a *app) initDeps() error {
+func (a *app) initDeps(ctx context.Context) error {
 	err := a.initConfigs()
 	if err != nil {
 		return err
 	}
 
 	a.initServiceProvider()
-	a.initGRPCServer()
+	a.initGRPCServer(ctx)
 
 	return nil
 }
@@ -64,11 +64,11 @@ func (a *app) initServiceProvider() {
 	a.serviceProvider = NewServiceProvider()
 }
 
-func (a *app) initGRPCServer() {
+func (a *app) initGRPCServer(ctx context.Context) {
 	a.grpcServer = grpc.NewServer()
 	reflection.Register(a.grpcServer)
 
-	chatpb.RegisterChatV1Server(a.grpcServer, a.serviceProvider.ChatServer())
+	chatpb.RegisterChatV1Server(a.grpcServer, a.serviceProvider.ChatServer(ctx))
 }
 
 func (a *app) runGRPCServer() error {

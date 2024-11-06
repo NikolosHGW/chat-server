@@ -1,13 +1,15 @@
 package chat
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/NikolosHGW/chat-server/internal/client/db"
+)
 
 type repo struct {
-	db *sqlx.DB
+	db db.Client
 }
 
 // NewRepo - конструктор для чат репо.
-func NewRepo(db *sqlx.DB) *repo {
+func NewRepo(db db.Client) *repo {
 	return &repo{db: db}
 }
 

@@ -1,14 +1,16 @@
 package app
 
 import (
+	"context"
 	"log"
 
 	apiChat "github.com/NikolosHGW/chat-server/internal/api/chat"
+	"github.com/NikolosHGW/chat-server/internal/client/db"
+	"github.com/NikolosHGW/chat-server/internal/client/db/pg"
 	"github.com/NikolosHGW/chat-server/internal/closer"
 	"github.com/NikolosHGW/chat-server/internal/infrastructure/config"
 	repoChat "github.com/NikolosHGW/chat-server/internal/repository/chat"
 	serviceChat "github.com/NikolosHGW/chat-server/internal/service/chat"
-	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
@@ -16,7 +18,7 @@ type serviceProvider struct {
 	pgConfig   *config.PublicPG
 	grpcConfig *config.PublicGRPC
 
-	dbClient *sqlx.DB
+	dbClient db.Client
 
 	chatRepo *repoChat.PublicRepo
 
@@ -55,9 +57,9 @@ func (sp *serviceProvider) GRPCConfig() *config.PublicGRPC {
 	return sp.grpcConfig
 }
 
-func (sp *serviceProvider) DBClient() *sqlx.DB {
+func (sp *serviceProvider) DBClient(ctx context.Context) db.Client {
 	if sp.dbClient == nil {
-		db, err := sqlx.Connect("postgres", sp.PGConfig().GetDatabaseDSN())
+		db, err := pg.New(ctx, sp.PGConfig().GetDatabaseDSN())
 		if err != nil {
 			log.Fatalf("не удалось настроить соединение с бд постгрес: %s", err.Error())
 		}
@@ -70,25 +72,25 @@ func (sp *serviceProvider) DBClient() *sqlx.DB {
 	return sp.dbClient
 }
 
-func (sp *serviceProvider) ChatRepo() *repoChat.PublicRepo {
+func (sp *serviceProvider) ChatRepo(ctx context.Context) *repoChat.PublicRepo {
 	if sp.chatRepo == nil {
-		sp.chatRepo = repoChat.NewRepo(sp.DBClient())
+		sp.chatRepo = repoChat.NewRepo(sp.DBClient(ctx))
 	}
 
 	return sp.chatRepo
 }
 
-func (sp *serviceProvider) ChatService() *serviceChat.PublicService {
+func (sp *serviceProvider) ChatService(ctx context.Context) *serviceChat.PublicService {
 	if sp.chatService == nil {
-		sp.chatService = serviceChat.NewService(sp.ChatRepo())
+		sp.chatService = serviceChat.NewService(sp.ChatRepo(ctx))
 	}
 
 	return sp.chatService
 }
 
-func (sp *serviceProvider) ChatServer() *apiChat.PublicServerImplementation {
+func (sp *serviceProvider) ChatServer(ctx context.Context) *apiChat.PublicServerImplementation {
 	if sp.chatServer == nil {
-		sp.chatServer = apiChat.NewImplementation(sp.ChatService())
+		sp.chatServer = apiChat.NewImplementation(sp.ChatService(ctx))
 	}
 
 	return sp.chatServer
