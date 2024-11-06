@@ -11,7 +11,6 @@ import (
 	"github.com/NikolosHGW/chat-server/internal/infrastructure/config"
 	repoChat "github.com/NikolosHGW/chat-server/internal/repository/chat"
 	serviceChat "github.com/NikolosHGW/chat-server/internal/service/chat"
-	_ "github.com/lib/pq"
 )
 
 type serviceProvider struct {
@@ -27,6 +26,7 @@ type serviceProvider struct {
 	chatServer *apiChat.PublicServerImplementation
 }
 
+// NewServiceProvider - конструктор сервис провайдера.
 func NewServiceProvider() *serviceProvider {
 	return &serviceProvider{}
 }

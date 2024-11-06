@@ -18,6 +18,7 @@ type app struct {
 	grpcServer      *grpc.Server
 }
 
+// NewApp - конструктор приложения.
 func NewApp(ctx context.Context) (*app, error) {
 	a := &app{}
 

@@ -12,6 +12,7 @@ type pgClient struct {
 	masterDBC db.DB
 }
 
+// New - конструктор клиента бд.
 func New(ctx context.Context, dsn string) (db.Client, error) {
 	db, err := sqlx.ConnectContext(ctx, "postgres", dsn)
 	if err != nil {

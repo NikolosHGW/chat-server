@@ -25,4 +25,7 @@ func NewImplementation(chatService Service) *implementation {
 	return &implementation{chatService: chatService}
 }
 
+// PublicServerImplementation - алиас для структуры gRPC имплементации чат-сервера.
+// Сделано в экспериментальных целях, чтоб пробросить
+// сервис провайдер чёткую структуру без менющихся интерфейсов.
 type PublicServerImplementation = implementation

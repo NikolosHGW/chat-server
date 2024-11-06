@@ -27,4 +27,7 @@ func (c grpc) GetRunAddress() string {
 	return net.JoinHostPort(c.GRPCHost, c.GRPCPort)
 }
 
+// PublicGRPC - алиас для структуры gRPC-конфига.
+// Сделано в экспериментальных целях, чтоб пробросить
+// сервис провайдер чёткую структуру без менющихся интерфейсов.
 type PublicGRPC = grpc

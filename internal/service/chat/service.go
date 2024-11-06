@@ -22,4 +22,7 @@ func NewService(chatRepo repoChat) *service {
 	return &service{chatRepo: chatRepo}
 }
 
+// PublicService - алиас для структуры чат-сервиса.
+// Сделано в экспериментальных целях, чтоб пробросить
+// сервис провайдер чёткую структуру без менющихся интерфейсов.
 type PublicService = service
