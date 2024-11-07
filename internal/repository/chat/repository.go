@@ -1,7 +1,7 @@
 package chat
 
 import (
-	"github.com/NikolosHGW/chat-server/internal/client/db"
+	"github.com/NikolosHGW/platform-common/pkg/db"
 )
 
 type repo struct {

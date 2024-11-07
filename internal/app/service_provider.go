@@ -5,13 +5,13 @@ import (
 	"log"
 
 	apiChat "github.com/NikolosHGW/chat-server/internal/api/chat"
-	"github.com/NikolosHGW/chat-server/internal/client/db"
-	"github.com/NikolosHGW/chat-server/internal/client/db/pg"
-	"github.com/NikolosHGW/chat-server/internal/client/db/transaction"
-	"github.com/NikolosHGW/chat-server/internal/closer"
 	"github.com/NikolosHGW/chat-server/internal/infrastructure/config"
 	repoChat "github.com/NikolosHGW/chat-server/internal/repository/chat"
 	serviceChat "github.com/NikolosHGW/chat-server/internal/service/chat"
+	"github.com/NikolosHGW/platform-common/pkg/closer"
+	"github.com/NikolosHGW/platform-common/pkg/db"
+	"github.com/NikolosHGW/platform-common/pkg/db/pg"
+	"github.com/NikolosHGW/platform-common/pkg/db/transaction"
 )
 
 type serviceProvider struct {

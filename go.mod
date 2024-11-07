@@ -3,6 +3,7 @@ module github.com/NikolosHGW/chat-server
 go 1.23.0
 
 require (
+	github.com/NikolosHGW/platform-common v0.0.0-20241107032232-d4c0346e758d
 	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/gojuno/minimock/v3 v3.4.1
 	github.com/golang/protobuf v1.5.4

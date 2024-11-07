@@ -6,9 +6,9 @@ import (
 	"log"
 	"net"
 
-	"github.com/NikolosHGW/chat-server/internal/closer"
 	"github.com/NikolosHGW/chat-server/internal/infrastructure/config"
 	chatpb "github.com/NikolosHGW/chat-server/pkg/chat/v1"
+	"github.com/NikolosHGW/platform-common/pkg/closer"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
