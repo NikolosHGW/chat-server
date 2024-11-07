@@ -66,6 +66,11 @@ func (sp *serviceProvider) DBClient(ctx context.Context) db.Client {
 			log.Fatalf("не удалось настроить соединение с бд постгрес: %s", err.Error())
 		}
 
+		err = db.DB().PingContext(ctx)
+		if err != nil {
+			log.Fatalf("ошибка во время пинга к бд: %s", err.Error())
+		}
+
 		closer.Add(db.Close)
 
 		sp.dbClient = db
