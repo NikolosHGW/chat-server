@@ -3,8 +3,8 @@ package chat
 import (
 	"context"
 
-	"github.com/NikolosHGW/chat-server/internal/client/db"
 	"github.com/NikolosHGW/chat-server/internal/infrastructure/db/dto"
+	"github.com/NikolosHGW/platform-common/pkg/db"
 )
 
 type repoChat interface {
