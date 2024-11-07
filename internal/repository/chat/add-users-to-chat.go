@@ -3,7 +3,11 @@ package chat
 import (
 	"context"
 	"fmt"
+
+	"github.com/NikolosHGW/platform-common/pkg/db"
 )
+
+const repositoryName = "chat_repository"
 
 type chatUser struct {
 	ChatID int64 `db:"chat_id"`
@@ -16,12 +20,15 @@ func (r *repo) AddUsersToChat(ctx context.Context, chatID int64, userIDs []int64
 		chatUsers[i] = chatUser{ChatID: chatID, UserID: userID}
 	}
 
-	query := `
-		INSERT INTO chat_users
-			(chat_id, user_id)
-        VALUES
-			(:chat_id, :user_id)
-	`
+	query := db.Query{
+		Name: repositoryName + ".add_user_to_chat",
+		QueryRaw: `
+			INSERT INTO chat_users
+				(chat_id, user_id)
+			VALUES
+				(:chat_id, :user_id)
+		`,
+	}
 
 	_, err := r.db.DB().NamedExecContext(ctx, query, chatUsers)
 	if err != nil {
